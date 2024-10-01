@@ -1,0 +1,159 @@
+{
+  "variables":
+  {
+    "client_id": "<INPUT YOUR CLIENT ID>",
+    "client_secret": "<INPUT YOUR CLIENT SECRET>",
+    "client_object_id": "<INPUT YOUR APP REGISTRATION OBJECT ID>",
+    "client_tenant_id": "<INPUT YOUR TENANT ID>",
+    "client_subscription_id": "<INPUT YOUR SUBSCRIPTION ID>",
+
+    "image_resource_group": "<INPUT YOUR AZURE RESOURCE GROUP>",
+    "optimizer_template": "<INPUT YOUR OPTIMIZER TEMPLATE XML>",
+
+    "vda_location": "<INPUT URL FOR VDA SERVER SETUP EXE FILE>",
+    "optimizer_location": "<INPUT URL FOR CITRIX OPTIMIZER ZIP FILE>",
+
+    "image_name": "win_server_2019_dc",
+    "location_setup": "c:\\setup",
+
+    "install_browser_chrome_flag": "true",
+    "install_browser_firefox_flag": "true",
+
+    "script_installvda":  "install-vda.ps1",
+    "script_optimizer":  "run-optimizer.ps1",
+    "script_installchrome":  "install-browser-chrome.ps1",
+    "script_installfirefox":  "install-browser-firefox.ps1",
+    "script_cleanup":  "run-cleanup.ps1",
+
+    "username": "packer",
+    "userpass": "Pass{{ isotime \"200601020304\" }}!@#"
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "tenant_id": "{{user `client_tenant_id`}}",
+    "subscription_id": "{{user `client_subscription_id`}}",
+    "object_id": "{{user `client_object_id`}}",
+
+    "managed_image_os_disk_snapshot_name": "{{user `image_name`}}_{{ isotime \"200601020304\" }}",
+    "managed_image_name": "{{user `image_name`}}_{{ isotime \"200601020304\" }}",
+    "managed_image_resource_group_name": "{{user `image_resource_group`}}",
+
+    "os_type": "Windows",
+    "image_publisher": "MicrosoftWindowsServer",
+    "image_offer": "WindowsServer",
+    "image_sku": "2019-Datacenter",
+    "image_version": "latest",
+
+    "communicator": "winrm",
+    "winrm_use_ssl": true,
+    "winrm_insecure": true,
+    "winrm_timeout": "20m",
+    "winrm_username": "{{user `username`}}",
+    "winrm_password": "{{user `userpass`}}",
+
+
+    "azure_tags": {
+        "Image": "Packer Generated"
+    },
+
+    "location": "East US",
+    "vm_size": "Standard_D2s_v3"
+  }],
+  "provisioners": 
+    [
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "New-Item -Path {{user `location_setup`}} -ItemType \"directory\" | Out-Null"
+            ]
+        },
+        {
+            "type": "file",
+            "source": ".\\scripts\\{{user `script_installvda`}}",
+            "destination": "{{user `location_setup`}}\\{{user `script_installvda`}}"
+        },
+        {
+            "type": "file",
+            "source": ".\\scripts\\{{user `script_optimizer`}}",
+            "destination": "{{user `location_setup`}}\\{{user `script_optimizer`}}"
+        },
+        {
+            "type": "file",
+            "source": ".\\scripts\\{{user `script_installchrome`}}",
+            "destination": "{{user `location_setup`}}\\{{user `script_installchrome`}}"
+        },
+        {
+            "type": "file",
+            "source": ".\\scripts\\{{user `script_installfirefox`}}",
+            "destination": "{{user `location_setup`}}\\{{user `script_installfirefox`}}"
+        },
+        {
+            "type": "file",
+            "source": ".\\scripts\\{{user `script_cleanup`}}",
+            "destination": "{{user `location_setup`}}\\{{user `script_cleanup`}}"
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_installvda`}} -VdaSetupDownloadUri {{user `vda_location`}}"
+            ]
+        },
+        {
+            "type": "windows-restart",
+            "restart_check_command": "powershell -command \"& {Write-Host 'Script: computer restarted.'}\"",
+            "restart_timeout": "30m"
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_installvda`}} -VdaSetupDownloadUri {{user `vda_location`}}"
+            ]
+        },
+        {
+            "type": "windows-restart",
+            "restart_check_command": "powershell -command \"& {Write-Host 'Script: computer restarted.'}\"",
+            "restart_timeout": "30m"
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_installvda`}} -VdaSetupDownloadUri {{user `vda_location`}}"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_optimizer`}} -OptimizerDownloadUri {{user `optimizer_location`}} -Template {{user `optimizer_template`}}"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_installchrome`}} -InstallSoftware {{user `install_browser_chrome_flag`}}"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_installfirefox`}} -InstallSoftware {{user `install_browser_firefox_flag`}}"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline":
+            [
+                "{{user `location_setup`}}\\{{user `script_cleanup`}} -Username {{user `username`}} -LocationPath {{user `location_setup`}}"
+            ]
+        }
+    ]
+}
