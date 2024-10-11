@@ -1,4 +1,4 @@
-# Packer Template For Windows 10 AVD 22H2
+# Packer Template For Windows Server 2019 Datacenter
 
 Packer template that will create image that includes installation of Citrix Virtual Delivery Agent, Chrome Browser, and Firefox Browser. Image also will run process of optimization using Citrix Optimizer.
 
@@ -41,12 +41,12 @@ In variable section there are few variables that need to be set before running t
 "vda_location" : url reference to blob in storage account where virtual delivery agent is stored
 "optimizer_location" : url reference to blob in storage account where zip file of citrix optimizer is stored
 
-"image_name" : prefix of name of the image and snapshot that will be used in caputring image. default value is "win_server_10_22h2" 
+"image_name" : prefix of name of the image and snapshot that will be used in capturing image. default value is "win_server_2019_dc" 
 "location_setup" : directory location on virtual machine where scripts will be copied to for processing. default value is "c:\\setup",
 ```
 
 ## Running the automation
 
 ```shell
-> .\packer.exe build .\win_server_10_22h2_packer_template.json
+> .\packer.exe build .\win_server_2019_dc_packer_template.json
 ```

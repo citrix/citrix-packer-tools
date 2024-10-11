@@ -41,7 +41,7 @@ In variable section there are few variables that need to be set before running t
 "vda_location" : url reference to blob in storage account where virtual delivery agent is stored
 "optimizer_location" : url reference to blob in storage account where zip file of citrix optimizer is stored
 
-"image_name" : prefix of name of the image and snapshot that will be used in caputring image. default value is "win_office_10_22h2" 
+"image_name" : prefix of name of the image and snapshot that will be used in capturing image. default value is "win_office_10_22h2" 
 "location_setup" : directory location on virtual machine where scripts will be copied to for processing. default value is "c:\\setup",
 ```
 

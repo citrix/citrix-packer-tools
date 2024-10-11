@@ -1,4 +1,4 @@
-# Packer Template For Windows 11 PRO 22H2
+# Packer Template For Windows 11 AVD 22H2 with Office 365
 
 Packer template that will create image that includes installation of Citrix Virtual Delivery Agent, Chrome Browser, and Firefox Browser. Image also will run process of optimization using Citrix Optimizer.
 
@@ -10,8 +10,8 @@ This is component needed for core functionality with Citrix Delivery Controller.
 Script will run Citrix Optimizer with xml appropriate template you select.
 Template is included inside Optmimizer zip file.
 
-Optionally we will install Chrome browser. Default installation value is true.
-Optionally we will install Firefox browser. Default installation value is true.
+Optionally script will install Chrome browser. Default installation value is true.
+Optionally script will install Firefox browser. Default installation value is true.
 
 ```shell
 "install_browser_chrome_flag": "true"
@@ -41,12 +41,12 @@ In variable section there are few variables that need to be set before running t
 "vda_location" : url reference to blob in storage account where virtual delivery agent is stored
 "optimizer_location" : url reference to blob in storage account where zip file of citrix optimizer is stored
 
-"image_name" : prefix of name of the image and snapshot that will be used in caputring image. default value is "win_desktop_11_22h2" 
+"image_name" : prefix of name of the image and snapshot that will be used in capturing image. default value is "win_office_11_22h2" 
 "location_setup" : directory location on virtual machine where scripts will be copied to for processing. default value is "c:\\setup",
 ```
 
 ## Running the automation
 
 ```shell
-> .\packer.exe build .\win_desktop_11_22h2_packer_template.json
+> .\packer.exe build .\win_office_11_22h2_packer_template.json
 ```
