@@ -1,4 +1,4 @@
-v{
+{
   "variables":
   {
     "client_id": "<INPUT YOUR CLIENT ID>",
@@ -26,7 +26,8 @@ v{
     "script_cleanup":  "run-cleanup.ps1",
 
     "username": "packer",
-    "userpass": "Pass{{ isotime \"200601020304\" }}!@#"
+    "userpass": "<INPUT USER PASSWORD>",
+    "winrm_insecure": "<INPUT TRUE or FALSE>"
   },
   "builders": [{
     "type": "azure-arm",
@@ -49,7 +50,7 @@ v{
 
     "communicator": "winrm",
     "winrm_use_ssl": true,
-    "winrm_insecure": true,
+    "winrm_insecure": "{{user `winrm_insecure`}}",
     "winrm_timeout": "20m",
     "winrm_username": "{{user `username`}}",
     "winrm_password": "{{user `userpass`}}",
