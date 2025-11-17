@@ -10,10 +10,10 @@
     "image_resource_group": "<INPUT YOUR AZURE RESOURCE GROUP>",
     "optimizer_template": "<INPUT YOUR OPTIMIZER TEMPLATE XML>",
 
-    "vda_location": "<INPUT URL FOR VDA SERVER SETUP EXE FILE>",
+    "vda_location": "<INPUT URL FOR VDA WORKSTATION SETUP EXE FILE>",
     "optimizer_location": "<INPUT URL FOR CITRIX OPTIMIZER ZIP FILE>",
 
-    "image_name": "win_server_10_22h2",
+    "image_name": "win_desktop_11_23h2",
     "location_setup": "c:\\setup",
 
     "install_browser_chrome_flag": "true",
@@ -44,8 +44,8 @@
 
     "os_type": "Windows",
     "image_publisher": "MicrosoftWindowsDesktop",
-    "image_offer": "Windows-10",
-    "image_sku": "WIN10-22H2-AVD",
+    "image_offer": "windows-11",
+    "image_sku": "WIN11-23H2-PRO",
     "image_version": "latest",
 
     "communicator": "winrm",
@@ -114,6 +114,21 @@
             "inline":
             [
                 "{{user `location_setup`}}\\{{user `script_installvda`}} -VdaSetupDownloadUri {{user `vda_location`}}"
+            ]
+        },        
+        {
+            "type": "powershell",
+            "inline": [
+                "$assemblyPath = \"C:\\Program Files (x86)\\Citrix\\ICA Client\\wfica32.exe\"", 
+                
+                "$ngen64 = \"C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\ngen.exe\"",
+                "$ngen32 = \"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\ngen.exe\"",
+                
+                "Write-Host \"Running 64-bit Ngen...\"",
+                "& $ngen64 executequeueditems",
+                
+                "Write-Host \"Running 32-bit Ngen...\"",
+                "& $ngen32 executequeueditems"
             ]
         },
         {

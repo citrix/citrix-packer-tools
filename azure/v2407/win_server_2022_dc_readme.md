@@ -8,7 +8,7 @@ Script will install Citrix Virtual Delivery Agent as Master Image with MCSIO sup
 This is component needed for core functionality with Citrix Delivery Controller.
 
 Script will run Citrix Optimizer with xml appropriate template you select.
-Template is included inside Optmimizer zip file.
+Template is included inside Optimizer zip file.
 
 Optionally script will install Chrome browser. Default installation value is true.
 Optionally script will install Firefox browser. Default installation value is true.
@@ -30,12 +30,12 @@ In variable section there are few variables that need to be set before running t
 
 ```shell
 "client_id" : reference to enterprise application client id
-"client_secret" : reference to enterprise applicatrion client secret
+"client_secret" : reference to enterprise application client secret
 "client_object_id" : reference to enterprise application object id
 "client_tenant_id" : reference to directory tenant id
 "client_subscription_id" : reference to subscription id
 
-"image_resource_group" : refrerence to existing azure resource group where image will be placed
+"image_resource_group" : reference to existing azure resource group where image will be placed
 "optimizer_template" : reference to xml template file that will be used in citrix optimizer
 
 "vda_location" : url reference to blob in storage account where virtual delivery agent is stored
