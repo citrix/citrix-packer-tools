@@ -13,7 +13,7 @@
     "vda_location": "<INPUT URL FOR VDA SERVER SETUP EXE FILE>",
     "optimizer_location": "<INPUT URL FOR CITRIX OPTIMIZER ZIP FILE>",
 
-    "image_name": "win_server_11_22h2",
+    "image_name": "win_office_11_23h2",
     "location_setup": "c:\\setup",
 
     "install_browser_chrome_flag": "true",
@@ -27,7 +27,7 @@
 
     "username": "packer",
     "userpass": "<INPUT USER PASSWORD>",
-    "winrm_insecure": "<INPUT TRUE or FALSE>"
+     "winrm_insecure": "<INPUT TRUE or FALSE>"
   },
   "builders": [{
     "type": "azure-arm",
@@ -44,8 +44,8 @@
 
     "os_type": "Windows",
     "image_publisher": "MicrosoftWindowsDesktop",
-    "image_offer": "windows-11",
-    "image_sku": "WIN11-22H2-AVD",
+    "image_offer": "office-365",
+    "image_sku": "WIN11-23H2-AVD-M365",
     "image_version": "latest",
 
     "communicator": "winrm",
@@ -74,30 +74,30 @@
         },
         {
             "type": "file",
-            "source": ".\\scripts\\{{user `script_installvda`}}",
+            "source": ".\\{{user `script_installvda`}}",
             "destination": "{{user `location_setup`}}\\{{user `script_installvda`}}"
         },
         {
             "type": "file",
-            "source": ".\\scripts\\{{user `script_optimizer`}}",
+            "source": "..\\scripts\\{{user `script_optimizer`}}",
             "destination": "{{user `location_setup`}}\\{{user `script_optimizer`}}"
         },
         {
             "type": "file",
-            "source": ".\\scripts\\{{user `script_installchrome`}}",
+            "source": "..\\scripts\\{{user `script_installchrome`}}",
             "destination": "{{user `location_setup`}}\\{{user `script_installchrome`}}"
         },
         {
             "type": "file",
-            "source": ".\\scripts\\{{user `script_installfirefox`}}",
+            "source": "..\\scripts\\{{user `script_installfirefox`}}",
             "destination": "{{user `location_setup`}}\\{{user `script_installfirefox`}}"
         },
         {
             "type": "file",
-            "source": ".\\scripts\\{{user `script_cleanup`}}",
+            "source": "..\\scripts\\{{user `script_cleanup`}}",
             "destination": "{{user `location_setup`}}\\{{user `script_cleanup`}}"
         },
-	{
+        {
             "type": "powershell",
             "inline":
             [

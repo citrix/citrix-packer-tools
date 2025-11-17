@@ -1,17 +1,17 @@
-# Packer Template For Windows 10 PRO 22H2
+# Packer Template For Windows Server 2022 Datacenter
 
 Packer template that will create image that includes installation of Citrix Virtual Delivery Agent, Chrome Browser, and Firefox Browser. Image also will run process of optimization using Citrix Optimizer.
 
 ## What will be installed
 
-Script will install Citrix Virtual Delivery Agent as Master Image with MCSIO support. 
+Script will install Citrix Virtual Delivery Agent as Master Image with MCSIO support and Citrix VDA Upgrade Agent Service. 
 This is component needed for core functionality with Citrix Delivery Controller.
 
 Script will run Citrix Optimizer with xml appropriate template you select.
 Template is included inside Optimizer zip file.
 
-Optionally we will install Chrome browser. Default installation value is true.
-Optionally we will install Firefox browser. Default installation value is true.
+Optionally script will install Chrome browser. Default installation value is true.
+Optionally script will install Firefox browser. Default installation value is true.
 
 ```shell
 "install_browser_chrome_flag": "true"
@@ -21,7 +21,7 @@ Optionally we will install Firefox browser. Default installation value is true.
 ## Necessary files
 
 Download HashiCorp Packer executable to run a process. You can put it in the same directory as your template.
-Download Citrix Virtual Delivery Agent 2407 and upload it to storage account for download during installation process.
+Download Citrix Virtual Delivery Agent 2503 and upload it to storage account for download during installation process.
 Download Citrix Optimizer and upload it to storage account for download during installation process.
 
 ## Setup variables
@@ -41,7 +41,7 @@ In variable section there are few variables that need to be set before running t
 "vda_location" : url reference to blob in storage account where virtual delivery agent is stored
 "optimizer_location" : url reference to blob in storage account where zip file of citrix optimizer is stored
 
-"image_name" : prefix of name of the image and snapshot that will be used in capturing image. default value is "win_desktop_10_22h2" 
+"image_name" : prefix of name of the image and snapshot that will be used in capturing image. default value is "win_server_2022_dc" 
 "location_setup" : directory location on virtual machine where scripts will be copied to for processing. default value is "c:\\setup",
 
 "userpass" : user password to be set
@@ -51,5 +51,5 @@ In variable section there are few variables that need to be set before running t
 ## Running the automation
 
 ```shell
-> .\packer.exe build .\win_desktop_10_22h2_packer_template.json
+> .\packer.exe build .\win_server_2022_dc_packer_template.json
 ```

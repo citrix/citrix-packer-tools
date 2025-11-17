@@ -4,7 +4,7 @@ Packer template that will create image that includes installation of Citrix Virt
 
 ## What will be installed
 
-Script will install Citrix Virtual Delivery Agent as Master Image with MCSIO support. 
+Script will install Citrix Virtual Delivery Agent as Master Image with MCSIO support and Citrix VDA Upgrade Agent Service. 
 This is component needed for core functionality with Citrix Delivery Controller.
 
 Script will run Citrix Optimizer with xml appropriate template you select.
@@ -21,7 +21,7 @@ Optionally we will install Firefox browser. Default installation value is true.
 ## Necessary files
 
 Download HashiCorp Packer executable to run a process. You can put it in the same directory as your template.
-Download Citrix Virtual Delivery Agent 2407 and upload it to storage account for download during installation process.
+Download Citrix Virtual Delivery Agent 2411 and upload it to storage account for download during installation process.
 Download Citrix Optimizer and upload it to storage account for download during installation process.
 
 ## Setup variables
