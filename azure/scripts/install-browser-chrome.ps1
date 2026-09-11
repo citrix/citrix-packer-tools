@@ -3,7 +3,7 @@ param(
     [string] $InstallSoftware = "True",
     
     [Parameter(Mandatory=$false)]
-    [string] $ChromeUrlPath = "http://dl.google.com/chrome/install/chrome_installer.exe"
+    [string] $ChromeUrlPath = "https://dl.google.com/chrome/install/chrome_installer.exe"
 )
 
 $ChromeFileName = "ChromeInstaller.exe"
@@ -54,6 +54,24 @@ $ChromeInstaller = Join-Path -Path "$($ENV:temp)" -ChildPath $ChromeFileName
 if (-not (Test-Path $ChromeInstaller)) {
     Download-File $ChromeUrlPath $ChromeInstaller
 }
+
+# This binary is fetched over the network and then executed, so its authenticity has to come from
+# the file itself rather than from the transport: $ChromeUrlPath is caller supplied, and HTTPS
+# proves who served the file but not what it is. Refuse to run anything not validly signed by Google.
+# The organisation is matched as a whole RDN rather than as a substring, so that a certificate
+# carrying the text "O=Google LLC" inside some other attribute (an OU, say) cannot satisfy the check.
+$ChromeExpectedSigner = '(^|,\s*)O=Google LLC(,|$)'
+$ChromeSignature = Get-AuthenticodeSignature -FilePath $ChromeInstaller
+if ($ChromeSignature.Status -ne "Valid" -or $ChromeSignature.SignerCertificate.Subject -notmatch $ChromeExpectedSigner) {
+    Remove-Item -Path $ChromeInstaller -Force -ErrorAction SilentlyContinue
+    # An unsigned file has no SignerCertificate at all, so the signer is resolved defensively -
+    # otherwise reporting the failure would itself throw and bury the real reason.
+    $ChromeSigner = if ($ChromeSignature.SignerCertificate) { $ChromeSignature.SignerCertificate.Subject } else { "<none>" }
+    $errorMsg = "Script: $(Get-Date -Format "dd-MM-y hh:mm:ss") - Chrome Browser installer failed Authenticode validation (status: $($ChromeSignature.Status), signer: $($ChromeSigner)); refusing to execute it"
+    Write-Host $errorMsg
+    throw $errorMsg
+}
+Write-Host "Script: $(Get-Date -Format "dd-MM-y hh:mm:ss") - Chrome Browser installer signature verified: $($ChromeSignature.SignerCertificate.Subject)"
 
 Write-Host "Script: $(Get-Date -Format "dd-MM-y hh:mm:ss") - Chrome Browser installation started"
 Write-Host "Script: $(Get-Date -Format "dd-MM-y hh:mm:ss") - Executing: $ChromeInstaller"
